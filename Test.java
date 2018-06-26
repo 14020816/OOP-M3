@@ -57,6 +57,84 @@ public final class Test {
 		return newBook;
 	}
 	
+	private void bookingCar(){
+		System.out.println("Hello welcome to Uber");
+		System.out.println("Enter your information");
+		System.out.println("Enter Name: ");
+		Booking NewBooking = new Booking();
+		Scanner input = new Scanner(System.in);
+		String Name = input.nextLine();
+		while(Name.isEmpty())
+		{
+			System.out.println("Invalid name, Enter you name again");
+			Name = input.nextLine();
+		}
+		System.out.println("Enter Email");	
+		String Mail = input.nextLine();
+		while(!Mail.contains("@"))
+		{
+			System.out.println("Invalid mail, Enter you mail again");
+			Mail = input.nextLine();
+		}
+		
+		if(this.CustemerID_Next > 0){
+			
+			for(int i = 0; i < this.CustemerID_Next ; i++)
+			{
+				System.out.println(this.ListCustomer[i].getMail());
+				System.out.println(Mail);
+				if(ListCustomer[i].getMail().equals(Mail))
+				{
+					System.out.println("VAO");
+					System.out.println("This email has already been used");
+					System.out.println("Choose your pick up location");
+					Scanner locationin = new Scanner(System.in);
+					String location = locationin.nextLine();
+					System.out.println("Choose your drop location");
+					String destination = locationin.nextLine();
+					int z = 0;
+					for(int j = 0; j < 100 ; j++)
+					{	
+						if(this.ListCar[j].getMake() == false)
+						{
+							System.out.println("Car " + z + " information:");
+							z++;
+							this.ListCar[j].showInfor();
+						}
+					}
+					//NewBooking.addBooking(this.ID_Next, this.ListCustomer[i], Car, this.CITY,location , destination);
+					
+					//return this.ListCustomer[i];
+				}
+				else
+				{
+				//	System.out.println("Create new account, Enter your address");
+				//	Scanner address = new Scanner(System.in);
+				//	Customer tmp = new Customer(this.CustemerID_Next,Name, Mail, address.nextLine(), 1);
+				//	this.CustemerID_Next ++;
+				//	ListCustomer[tmp.getId()] = tmp;
+				//	tmp.showInfor();
+				//	System.out.println("Your account just created, choose your location and destination");
+				//	System.out.println("TRen");
+				//	System.out.println(this.CustemerID_Next);
+				//	break;
+					//return tmp;
+				}
+			}
+		}
+		else 
+		{
+			Scanner address = new Scanner(System.in);
+			Customer tmp = new Customer(this.CustemerID_Next,Name, Mail, address.nextLine(), 1);
+			this.CustemerID_Next ++;
+			ListCustomer[tmp.getId()] = tmp;
+			System.out.println("Duoi");
+			//return tmp;
+		}
+		
+		
+	}
+	
 	
 	private Customer newCustomer(String Name, String Mail, String Address)
 	{
@@ -83,6 +161,7 @@ public final class Test {
 			this.CustemerID_Next ++;
 			ListCustomer[tmp.getId()] = tmp;
 			return tmp;
+			
 		}
 		return null;
 		
@@ -121,8 +200,12 @@ public final class Test {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		BK1.showBooking();
-		BK2.showBooking();
+		T.bookingCar();
+		
+		
+		
+		//BK1.showBooking();
+	//	BK2.showBooking();
 		//T.ListCustomer[0].showInfor();
 	}
 }
