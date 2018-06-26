@@ -9,6 +9,7 @@ public final class Test {
 	private static int CustemerID_Next;
 	private Car[] ListCar = new Car[100];
 	private Driver[] ListDriver = new Driver[100];
+	
 
 	private Customer[] ListCustomer = new Customer[100];
 	private void createCar()
@@ -22,7 +23,16 @@ public final class Test {
 			ListCar[i] = new Car(i, "Ford", 7);
 		}
 	}
-
+	
+	public boolean checkCar()
+	{
+		for(int i = 0; i < 100; i++)
+		{
+			if(this.ListCar[i].getMake() == true);
+			return false;
+		}
+		return true;
+	}
 	private void createDriver()
 	{
 		for(int i = 0 ; i < 50 ; i++)
