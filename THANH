@@ -8,6 +8,8 @@
 #include <fstream>
 #include <conio.h>
 #include <list>
+#include <cstdlib> 
+#include <windows.h>
 //using namespace std;
 class Card
 {
@@ -29,115 +31,60 @@ Card::~Card()
 {
 }
 
-class ATM
-{
-public:
-	ATM();
-	~ATM();
-	std::string ID;
-	Card curentCard;
-	//User *curentUser;
-	std::string listIDCard[100];
-	int index = 0;
-	void Login(Card inputCard)
-	{
-		
-		std::string line;
-		std::fstream file("TheTu.dat");
-		while (std::getline(file,line))
-		{
-			listIDCard[index] = line;
-			index++;
-			std::getline(file,line);
-		}
-		curentCard = inputCard;
-	//	curentUser = curentCard.user;
-		if (validateCard(curentCard))
-		{
-			std::cout << "Hello: " << std::endl;
-			validatePIN();
-		}
-		
-	}
-	bool validatePIN()
-	{
-		std::string PIN;
-		std::cout << "Enter PIN" << std::endl;
-		std::cin >> PIN;
-		if (curentCard.PIN == PIN)
-		{
-			Portal();
-			return true;
-		}
-		else
-		{
-			std::cout << "Invalid password" << std::endl;
-			//curentCard = new Card;
-			return false;
-		}
-	}
-	bool validateCard(Card inputCard)
-	{
-		
-		for (int i = 0; i < index; i++)
-		{
-			if (listIDCard[i] == inputCard.ID)
-			{
-				return true;
-			}
-		}
-		return false;
-	}
-	void Portal()
-	{
-		std::cout << "1. Withdraw        2.Do Something" << std::endl;
-	}
-
-private:
-};
-
-ATM::ATM()
-{
-}
-
-ATM::~ATM()
-{
-}
-
-
-
 class User
 {
 public:
 	std::string ID;
-	Card myCard;
+	Card *myCard;
 	std::string Name;
 	double Balance;
-	void PrintInfo()
+	void ShowInfo()
 	{
-		std::cout << "User Infomation" << std::endl;
-		std::cout << "User Namr: " << Name << std::endl;
-		std::cout << "CardID: " << myCard.ID << std::endl;
+		std::cout << "User Infomation" <<std::endl;
+		std::cout << "User Name: " << Name << std::endl;
+		std::cout << "CardID: " << ID << std::endl;
+		std::cout << "Balance: " << Balance << std::endl;
 	}
-	
-	void Withdrawal(double money)
+
+	void Withdrawal()
 	{
-		this->Balance = this->Balance - money;
+		double money;
+		std::cin >> money;
+		if (Balance >= money)
+		{
+			this->Balance = this->Balance - money;
+			ChangeBalance();
+			std::cout << "Cuccess, wait to take your card and get money " << std::endl;
+		}
+		else
+		{
+			std::cout << "Not Enough" << std::endl;
+		}
+
+	}
+
+	void ChangeBalance()
+	{
+		std::string fileName = "[";
+		fileName = fileName.append(ID);
+		fileName = fileName.append("].dat");
+		std::ofstream o(fileName);
+		o << ID << "," << Name << "," << Balance << std::endl;
 	}
 
 	void AddMoney(double money)
 	{
 		this->Balance = this->Balance + money;
 	}
-	void newCard(Card newCard)
+	void newCard(Card *newCard)
 	{
 		this->myCard = newCard;
 	}
 	User getUserByID(std::string userID)
 	{
-		
+
 		std::string fileName = "[";
-		fileName = fileName.append(ID);
+		fileName = fileName.append(userID);
 		fileName = fileName.append("].dat");
 		std::fstream file(fileName);
 		User tmp;
@@ -148,6 +95,7 @@ public:
 		tmp.Balance = std::stod(balance);
 		return tmp;
 	}
+
 	std::string getNamebyID(std::string ID)
 	{
 		std::string fileName = "[";
@@ -169,30 +117,143 @@ public:
 private:
 
 };
-
-
 User::User(std::string ID, std::string Name, double Balance)
 {
 	std::string fileName = "[";
 	fileName = fileName.append(ID);
 	fileName = fileName.append("].dat");
 	std::ofstream o(fileName);
-	o << ID  << "," << Name <<  ","  << Balance << std::endl;
+	o << ID << "\n" << Name << "\n" << Balance << std::endl;
+	this->ID = ID;
+	this->Name = Name;
+	this->Balance = Balance;
 }
 
 User::~User()
 {
 }
 
+class ATM
+{
+public:
+	ATM();
+	~ATM();
+	std::string ID;
+	Card *curentCard;
+	User *currentUser;
+	std::string listIDCard[100];
+	int index = 0;
+	void Login(User *user)
+	{
+		
+		std::string line;
+		std::fstream file("TheTu.dat");
+		while (std::getline(file,line))
+		{
+			listIDCard[index] = line;
+			index++;
+			std::getline(file,line);
+		}
+		currentUser = user;
+		//currentUser->Balance *= 2;
+		
+		curentCard = user->myCard;
+		
+	//	curentUser = curentCard.user;
+		if (validateCard(curentCard))
+		{
+			std::cout << "Hello: " << std::endl;
+			bool c = validatePIN();
+			if (c)
+			{
+				Portal();
+			}
+		}
+		
+	}
+	bool validatePIN()
+	{
+		std::string PIN;
+		std::cout << "Enter PIN" << std::endl;
+		std::cin >> PIN;
+		if (curentCard->PIN == PIN)
+		{
+			return true;
+		}
+		else
+		{
+			std::cout << "Invalid password" << std::endl;
+			//curentCard = new Card;
+			return false;
+		}
+	}
+	bool validateCard(Card *inputCard)
+	{
+		
+		for (int i = 0; i < index; i++)
+		{
+			if (listIDCard[i] == inputCard->ID)
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+	void Portal()
+	{
+		system("cls");
+		std::cout << currentUser->Name << std::endl;
+		std::cout << "1. Withdraw        2.Do Something" << std::endl;
+		std::cout << "3. CheckInfo       4.Do Something" << std::endl;
+		std::cout << "0. Exit" << std::endl;
+		int action;
+		std::cin >> action;
+		switch (action)
+		{
+		case 1:
+			currentUser->Withdrawal();
+			Portal();
+			break;
+		case 3: 
+			currentUser->ShowInfo();
+			Sleep(5000);
+			Portal();
+			break;
+		case 0: 
+			break;
+		default:
+			break;
+		}
+	}
+
+private:
+};
+
+ATM::ATM()
+{
+}
+
+ATM::~ATM()
+{
+}
+
+void xxx(User *u)
+{
+	u->Balance /= 2;
+}
 int main()
 {
-	User test("123456", "XXX", 10000);
-	Card CardTest;
-	CardTest.ID = "123456";
-	CardTest.PIN = "1111";
+	User test;
+	test = test.getUserByID("123456");
+	User test2("000000", "Nguyen Van B", 99999);
+	Card *CardTest = new Card();
+	CardTest->ID = "123456";
+	CardTest->PIN = "1111";
+	test.myCard = CardTest;
 	ATM ATest;
-	ATest.Login(CardTest);
+	ATest.Login(&test);
+	//xxx(&test);
+	double c = test.Balance;
 	_getch();
     return 0;
 }
-
