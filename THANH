@@ -1,0 +1,198 @@
+// ConsoleApplication10.cpp : Defines the entry point for the console application.
+//
+
+#include "stdafx.h"
+#include <iostream>
+#include <string.h>
+#include <string>
+#include <fstream>
+#include <conio.h>
+#include <list>
+//using namespace std;
+class Card
+{
+public:
+	std::string ID;
+	std::string PIN;
+	std::string UserID;
+	Card();
+	~Card();
+private:
+
+};
+
+Card::Card()
+{
+}
+
+Card::~Card()
+{
+}
+
+class ATM
+{
+public:
+	ATM();
+	~ATM();
+	std::string ID;
+	Card curentCard;
+	//User *curentUser;
+	std::string listIDCard[100];
+	int index = 0;
+	void Login(Card inputCard)
+	{
+		
+		std::string line;
+		std::fstream file("TheTu.dat");
+		while (std::getline(file,line))
+		{
+			listIDCard[index] = line;
+			index++;
+			std::getline(file,line);
+		}
+		curentCard = inputCard;
+	//	curentUser = curentCard.user;
+		if (validateCard(curentCard))
+		{
+			std::cout << "Hello: " << std::endl;
+			validatePIN();
+		}
+		
+	}
+	bool validatePIN()
+	{
+		std::string PIN;
+		std::cout << "Enter PIN" << std::endl;
+		std::cin >> PIN;
+		if (curentCard.PIN == PIN)
+		{
+			Portal();
+			return true;
+		}
+		else
+		{
+			std::cout << "Invalid password" << std::endl;
+			//curentCard = new Card;
+			return false;
+		}
+	}
+	bool validateCard(Card inputCard)
+	{
+		
+		for (int i = 0; i < index; i++)
+		{
+			if (listIDCard[i] == inputCard.ID)
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+	void Portal()
+	{
+		std::cout << "1. Withdraw        2.Do Something" << std::endl;
+	}
+
+private:
+};
+
+ATM::ATM()
+{
+}
+
+ATM::~ATM()
+{
+}
+
+
+
+class User
+{
+public:
+	std::string ID;
+	Card myCard;
+	std::string Name;
+	double Balance;
+	void PrintInfo()
+	{
+		std::cout << "User Infomation" << std::endl;
+		std::cout << "User Namr: " << Name << std::endl;
+		std::cout << "CardID: " << myCard.ID << std::endl;
+	}
+	
+	void Withdrawal(double money)
+	{
+		this->Balance = this->Balance - money;
+	}
+
+	void AddMoney(double money)
+	{
+		this->Balance = this->Balance + money;
+	}
+	void newCard(Card newCard)
+	{
+		this->myCard = newCard;
+	}
+	User getUserByID(std::string userID)
+	{
+		
+		std::string fileName = "[";
+		fileName = fileName.append(ID);
+		fileName = fileName.append("].dat");
+		std::fstream file(fileName);
+		User tmp;
+		std::getline(file, tmp.ID);
+		std::getline(file, tmp.Name);
+		std::string balance;
+		std::getline(file, balance);
+		tmp.Balance = std::stod(balance);
+		return tmp;
+	}
+	std::string getNamebyID(std::string ID)
+	{
+		std::string fileName = "[";
+		fileName = fileName.append(ID);
+		fileName = fileName.append("].dat");
+		std::fstream file(fileName);
+		std::string name;
+		if (std::getline(file, name)) {
+			return name;
+		}
+		return NULL;
+
+	}
+	User(std::string ID, std::string Name, double Balance);
+	User()
+	{};
+	~User();
+
+private:
+
+};
+
+
+User::User(std::string ID, std::string Name, double Balance)
+{
+	std::string fileName = "[";
+	fileName = fileName.append(ID);
+	fileName = fileName.append("].dat");
+	std::ofstream o(fileName);
+	o << ID  << "," << Name <<  ","  << Balance << std::endl;
+}
+
+User::~User()
+{
+}
+
+int main()
+{
+	User test("123456", "XXX", 10000);
+	Card CardTest;
+	CardTest.ID = "123456";
+	CardTest.PIN = "1111";
+	ATM ATest;
+	ATest.Login(CardTest);
+	_getch();
+    return 0;
+}
+
