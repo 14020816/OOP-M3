@@ -38,7 +38,7 @@ public:
 	Card *myCard;
 	std::string Name;
 	double Balance;
-	void ShowInfo()
+	void ShowInfo() // Hiển thị
 	{
 		std::cout << "User Infomation" <<std::endl;
 		std::cout << "User Name: " << Name << std::endl;
@@ -46,7 +46,7 @@ public:
 		std::cout << "Balance: " << Balance << std::endl;
 	}
 
-	void Withdrawal()
+	void Withdrawal() //Rút tiền 
 	{
 		double money;
 		std::cin >> money;
@@ -63,7 +63,7 @@ public:
 
 	}
 
-	void ChangeBalance()
+	void ChangeBalance() // Thay đổi số dư trong tài khoản lưu trong file
 	{
 		std::string fileName = "[";
 		fileName = fileName.append(ID);
@@ -72,15 +72,15 @@ public:
 		o << ID << "," << Name << "," << Balance << std::endl;
 	}
 
-	void AddMoney(double money)
+	void AddMoney(double money) // Thêm tiền
 	{
 		this->Balance = this->Balance + money;
 	}
-	void newCard(Card *newCard)
+	void newCard(Card *newCard) // toạ card mới
 	{
 		this->myCard = newCard;
 	}
-	User getUserByID(std::string userID)
+	User getUserByID(std::string userID) // Lấy thông tin user thông qua ID
 	{
 
 		std::string fileName = "[";
@@ -96,7 +96,7 @@ public:
 		return tmp;
 	}
 
-	std::string getNamebyID(std::string ID)
+	std::string getNamebyID(std::string ID) // Lấy tên người dùng thông qua ID
 	{
 		std::string fileName = "[";
 		fileName = fileName.append(ID);
@@ -117,7 +117,7 @@ public:
 private:
 
 };
-User::User(std::string ID, std::string Name, double Balance)
+User::User(std::string ID, std::string Name, double Balance) // Cóntructor của user
 {
 	std::string fileName = "[";
 	fileName = fileName.append(ID);
@@ -143,7 +143,7 @@ public:
 	User *currentUser;
 	std::string listIDCard[100];
 	int index = 0;
-	void Login(User *user)
+	void Login(User *user) // Đăng nhập vào ATM
 	{
 		
 		std::string line;
@@ -171,7 +171,7 @@ public:
 		}
 		
 	}
-	bool validatePIN()
+	bool validatePIN() // Xác thực mã PIN
 	{
 		std::string PIN;
 		std::cout << "Enter PIN" << std::endl;
@@ -187,7 +187,7 @@ public:
 			return false;
 		}
 	}
-	bool validateCard(Card *inputCard)
+	bool validateCard(Card *inputCard) // Xác thực Card
 	{
 		
 		for (int i = 0; i < index; i++)
@@ -199,7 +199,7 @@ public:
 		}
 		return false;
 	}
-	void Portal()
+	void Portal() // Màn hình chính của ATM
 	{
 		system("cls");
 		std::cout << currentUser->Name << std::endl;
@@ -237,7 +237,7 @@ ATM::~ATM()
 {
 }
 
-void xxx(User *u)
+void xxx(User *u) // Test thôi xoá nó đi 
 {
 	u->Balance /= 2;
 }
